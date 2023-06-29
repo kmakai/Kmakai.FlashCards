@@ -1,6 +1,6 @@
 ﻿namespace Kmakai.FlashCards.Models;
 
-internal class Stack
+public class Stack
 
 {
     public int Id { get; set; }

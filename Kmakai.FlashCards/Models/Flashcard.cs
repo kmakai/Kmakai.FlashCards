@@ -1,6 +1,6 @@
 ﻿namespace Kmakai.FlashCards.Models;
 
-internal class Flashcard
+public class Flashcard
 {
     public int Id { get; set; }
     public int StackId { get; set; }
