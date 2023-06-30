@@ -57,8 +57,8 @@ public class DbContext
                     CREATE TABLE Flashcards (
                         Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
                         StackId INT NOT NULL,
-                        Question NVARCHAR(50) NOT NULL,
-                        Answer NVARCHAR(50) NOT NULL,
+                        Front NVARCHAR(50) NOT NULL,
+                        Back NVARCHAR(50) NOT NULL,
                         FOREIGN KEY (StackId) REFERENCES Stacks(Id) ON DELETE CASCADE
                     );
                 END
@@ -68,6 +68,7 @@ public class DbContext
                         Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
                         StackId INT NOT NULL,
                         Score INT NOT NULL,
+                        Date DATE NOT NULL,
                         FOREIGN KEY (StackId) REFERENCES Stacks(Id) ON DELETE CASCADE
                     );
                 END";

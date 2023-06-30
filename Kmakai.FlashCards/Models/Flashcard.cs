@@ -4,12 +4,13 @@ public class Flashcard
 {
     public int Id { get; set; }
     public int StackId { get; set; }
-    public string Question { get; set; }
-    public string Answer { get; set; }
-    public Flashcard(string question, string answer, int stackId)
+    public string Front { get; set; }
+    public string Back { get; set; }
+   
+    public Flashcard(int stackId, string front, string back)
     {
-        Question = question;
-        Answer = answer;
         StackId = stackId;
+        Front = front;
+        Back = back;
     }
 }
