@@ -1,6 +1,6 @@
 ﻿namespace Kmakai.FlashCards.Models;
 
 public class FlashcardDTO
-{   public string? Question { get; set; }
-    public string? Answer { get; set; }
+{   public string? Front { get; set; }
+    public string? Back { get; set; }
 }

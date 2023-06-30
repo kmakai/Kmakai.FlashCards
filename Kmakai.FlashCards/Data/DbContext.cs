@@ -49,7 +49,7 @@ public class DbContext
                 BEGIN
                     CREATE TABLE Stacks (
                         Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
-                        Name NVARCHAR(50) NOT NULL
+                        Name NVARCHAR(50) NOT NULL UNIQUE
                     );
                 END
                 IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Flashcards')
