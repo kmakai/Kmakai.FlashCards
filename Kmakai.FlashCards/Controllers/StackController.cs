@@ -6,10 +6,11 @@ namespace Kmakai.FlashCards.Controllers;
 
 public class StackController
 {
-    private readonly string? ConnectionString = ConfigurationManager.AppSettings.Get("connectionString");
+    private static readonly string? ConnectionString = ConfigurationManager.AppSettings.Get("connectionString");
 
-    public void CreateStack(string name)
+    public static void CreateStack(string name)
     {
+
         using (SqlConnection connection = new SqlConnection(ConnectionString))
         {
             connection.Open();
@@ -27,7 +28,7 @@ public class StackController
         Console.WriteLine("Stack created");
     }
 
-    public Stack GetStack(string name)
+    public static Stack GetStack(string name)
     {
         if (name == null)
         {
@@ -49,7 +50,6 @@ public class StackController
             if (reader.Read())
             {
                 stack.Id = reader.GetInt32(0);
-                stack.Flashcards = GetStacKFlashcards(stack.Id);
             }
 
             connection.Close();
@@ -57,7 +57,37 @@ public class StackController
         return stack;
     }
 
-    public List<Flashcard> GetStacKFlashcards(int stackId)
+    public static List<Stack> GetStacks()
+    {
+        var stacks = new List<Stack>();
+
+        using (SqlConnection connection = new SqlConnection(ConnectionString))
+        {
+            connection.Open();
+            var command = connection.CreateCommand();
+            command.CommandText = @$"
+                SELECT * FROM Stacks
+                ORDER BY Id ASC
+            ";
+
+            var reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Stack stack = new Stack(reader.GetString(1))
+                {
+                    Id = reader.GetInt32(0)
+                };
+                stacks.Add(stack);
+            }
+
+            connection.Close();
+        }
+
+        return stacks;
+    }
+
+    public static List<Flashcard> GetStacKFlashcards(int stackId)
     {
         var flashcards = new List<Flashcard>();
 
@@ -86,7 +116,7 @@ public class StackController
         return flashcards;
     }
 
-    public void AddFlashcardToStack(int stackId, string front, string back)
+    public static void AddFlashcardToStack(int stackId, string front, string back)
     {
         using (SqlConnection connection = new SqlConnection(ConnectionString))
         {
@@ -102,7 +132,7 @@ public class StackController
         }
     }
 
-    public void DeleteStack(int stackId)
+    public static void DeleteStack(int stackId)
     {
         using (SqlConnection connection = new SqlConnection(ConnectionString))
         {
@@ -123,5 +153,5 @@ public class StackController
             connection.Close();
         }
     }
-    
+
 }

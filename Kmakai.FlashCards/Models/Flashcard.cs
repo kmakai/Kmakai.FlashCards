@@ -13,4 +13,5 @@ public class Flashcard
         Front = front;
         Back = back;
     }
+
 }

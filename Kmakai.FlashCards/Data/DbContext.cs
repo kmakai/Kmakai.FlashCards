@@ -48,7 +48,7 @@ public class DbContext
                 IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Stacks')
                 BEGIN
                     CREATE TABLE Stacks (
-                        Id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+                        Id INT IDENTITY(1,1) PRIMARY KEY,
                         Name NVARCHAR(50) NOT NULL UNIQUE
                     );
                 END
