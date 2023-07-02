@@ -41,10 +41,15 @@ public class DisplayController
 
     public static void DisplayStacksMenu(List<Stack> stacks)
     {
+        List<string> stackNames = new List<string>();
+        foreach (var stack in stacks)
+        {
+            stackNames.Add(stack.Name);
+        }
         Console.Clear();
         Console.WriteLine("----------Stacks------------");
-        ConsoleTableBuilder.From(stacks)
-            .WithColumn("Id", "Name")
+        ConsoleTableBuilder.From(stackNames)
+            .WithColumn("Name")
             .ExportAndWriteLine();
 
         Console.WriteLine("What would you like to do?");
@@ -67,10 +72,19 @@ public class DisplayController
 
     public static void DisplayFlashcards(List<Flashcard> flashcards)
     {
+        List<FlashcardDTO> flashcardDTOs = new List<FlashcardDTO>();
+       
+        for (int i = 0; i < flashcards.Count; i++)
+        {
+            flashcardDTOs.Add(new FlashcardDTO( i + 1, flashcards[i].Front, flashcards[i].Back));
+        }
         Console.Clear();
         Console.WriteLine("----------Flashcards------------");
-        ConsoleTableBuilder.From(flashcards)
-            .WithColumn("id","StackId","Front", "Back")
+        ConsoleTableBuilder.From(flashcardDTOs)
+            .WithColumn("Id","Front", "Back")
             .ExportAndWriteLine();
+
+        Console.WriteLine("Press any key to continue");
+        Console.ReadKey();
     }
 }

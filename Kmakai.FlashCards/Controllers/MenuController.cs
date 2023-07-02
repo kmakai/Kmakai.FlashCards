@@ -54,19 +54,17 @@ public class MenuController
 
     public void HandleStackMenu()
     {
-        Console.WriteLine("Enter the id of the stack you want to manage");
-        Console.Write("Id: ");
-        string? idInput = Console.ReadLine();
-        int id = Convert.ToInt32(idInput);
-        var stack = App?.Stacks.FirstOrDefault(x => x.Id == id);
+        Console.WriteLine("Enter the name of the stack you want to manage");
+        Console.Write("Name: ");
+        string? nameInput = Console.ReadLine();
+        var stack = App?.Stacks.FirstOrDefault(x => x.Name == nameInput);
 
         while (stack == null)
         {
             Console.WriteLine("Please enter a valid id");
             Console.Write("Id: ");
-            idInput = Console.ReadLine();
-            id = Convert.ToInt32(idInput);
-            stack = App?.Stacks.FirstOrDefault(x => x.Id == id);
+            nameInput = Console.ReadLine();
+            stack = App?.Stacks.FirstOrDefault(x => x.Name == nameInput);
         }
 
         if (App != null)
@@ -76,10 +74,11 @@ public class MenuController
         }
 
 
-        DisplayController.DisplayStackMenu(stack);
-        Console.Write("option: ");
+
         while (true)
         {
+            DisplayController.DisplayStackMenu(stack);
+            Console.Write("option: ");
             string? input = Console.ReadLine();
 
             switch (input)
@@ -126,7 +125,7 @@ public class MenuController
 
     public void DeleteStack()
     {
-        Console.WriteLine("Enter the id of the stack you want to delete");
+        Console.WriteLine("Enter the name of the stack you want to delete");
         Console.Write("Id: ");
         string? input = Console.ReadLine();
         int id;
@@ -194,6 +193,7 @@ public class MenuController
         Console.WriteLine("Card added!");
         Console.WriteLine("Press any key to continue");
         Console.ReadKey();
+        DisplayController.DisplayFlashcards(App.StackFlashcards);
 
     }
 
@@ -208,13 +208,14 @@ public class MenuController
         string? input = Console.ReadLine();
         int id;
 
-        while (!int.TryParse(input, out id) || !App.StackFlashcards.Any(x => x.Id == id))
+        while (!int.TryParse(input, out id) || (id > App.StackFlashcards.Count || id < 1))
         {
             Console.WriteLine("Please enter a valid id");
             Console.Write("Id: ");
             input = Console.ReadLine();
         }
 
+       var stack = App.StackFlashcards[id - 1];
         char? confirm = null;
         while (confirm != 'y' && confirm != 'n')
         {
@@ -226,8 +227,8 @@ public class MenuController
 
         if (confirm == 'y')
         {
-            FlashcardController.DeleteFlashcard(id);
-            App.StackFlashcards.RemoveAll(x => x.Id == id);
+            FlashcardController.DeleteFlashcard(stack.Id);
+            App.StackFlashcards.Remove(stack);
             Console.WriteLine("Card deleted");
             Thread.Sleep(1000);
         }
