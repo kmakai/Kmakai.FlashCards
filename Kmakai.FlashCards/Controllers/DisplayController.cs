@@ -18,11 +18,6 @@ public class DisplayController
 
     }
 
-   public static void DisplayStacksMenu()
-    {
-
-    }
-
     public static void DisplayStackMenu(Stack stack)
     {
         Console.Clear();
@@ -54,7 +49,7 @@ public class DisplayController
 
         Console.WriteLine("What would you like to do?");
         Console.WriteLine("1.Delete a stack");
-        Console.WriteLine("2.View Stack");
+        Console.WriteLine("2.Manage Stack");
         Console.WriteLine("3.Return to main menu");
     }
 
@@ -67,6 +62,15 @@ public class DisplayController
             .WithColumn("StackId", "StackId")
             .WithColumn("Score", "Score")
             .WithColumn("Date", "Date")
+            .ExportAndWriteLine();
+    }
+
+    public static void DisplayFlashcards(List<Flashcard> flashcards)
+    {
+        Console.Clear();
+        Console.WriteLine("----------Flashcards------------");
+        ConsoleTableBuilder.From(flashcards)
+            .WithColumn("id","StackId","Front", "Back")
             .ExportAndWriteLine();
     }
 }

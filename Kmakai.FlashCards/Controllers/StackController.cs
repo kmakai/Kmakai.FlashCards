@@ -87,51 +87,6 @@ public class StackController
         return stacks;
     }
 
-    public static List<Flashcard> GetStacKFlashcards(int stackId)
-    {
-        var flashcards = new List<Flashcard>();
-
-        using (SqlConnection connection = new SqlConnection(ConnectionString))
-        {
-            connection.Open();
-            var command = connection.CreateCommand();
-            command.CommandText = @$"
-                SELECT * FROM Flashcards
-                WHERE StackId = {stackId}";
-
-            var reader = command.ExecuteReader();
-
-            while (reader.Read())
-            {
-                Flashcard flashcard = new Flashcard(reader.GetInt32(1), reader.GetString(2), reader.GetString(3))
-                {
-                    Id = reader.GetInt32(0)
-                };
-                flashcards.Add(flashcard);
-            }
-
-            connection.Close();
-        }
-
-        return flashcards;
-    }
-
-    public static void AddFlashcardToStack(int stackId, string front, string back)
-    {
-        using (SqlConnection connection = new SqlConnection(ConnectionString))
-        {
-            connection.Open();
-            var command = connection.CreateCommand();
-            command.CommandText = @$" 
-                INSERT INTO Flashcards (StackId, front, back)
-                VALUES ('{stackId}', '{front}', '{back}')";
-
-            command.ExecuteNonQuery();
-
-            connection.Close();
-        }
-    }
-
     public static void DeleteStack(int stackId)
     {
         using (SqlConnection connection = new SqlConnection(ConnectionString))
