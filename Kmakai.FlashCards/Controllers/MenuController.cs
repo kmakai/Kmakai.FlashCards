@@ -43,6 +43,13 @@ public class MenuController
                 HandleStudyMenu();
                 break;
             case "4":
+                if (App?.StudySessions.Count == 0)
+                {
+                    Console.WriteLine("No study sessions found");
+                    Console.WriteLine("Press any key to continue");
+                    Console.ReadKey();
+                    break;
+                }
                 DisplayController.DisplaySessions(App.StudySessions);
                 break;
             case "5":
@@ -149,11 +156,12 @@ public class MenuController
             name = Console.ReadLine();
         }
 
-        var stack = new Stack(name);
         StackController.CreateStack(name);
 
-        stack.Id = App.Stacks.Count() + 1;
-        App.Stacks.Add(new Stack(name));
+        var stack = StackController.GetStack(name);
+
+        App.Stacks.Add(stack);
+        App.CurrentStack = stack;
 
         Console.WriteLine($"Stack {name} created!");
         Console.WriteLine("Press any key to continue");

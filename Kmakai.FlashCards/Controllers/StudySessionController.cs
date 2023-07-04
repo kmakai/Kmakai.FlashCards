@@ -61,9 +61,10 @@ public class StudySessionController
 
         foreach (Flashcard card in cards)
         {
+            Console.Clear();
             var table = new List<List<object?>> { new List<object?> { card.Front } };
             ConsoleTableBuilder.From(table).WithFormat(ConsoleTableBuilderFormat.Alternative).WithColumn("Front").ExportAndWriteLine();
-           
+
             Console.WriteLine("What is the answer for this card");
             Console.Write("Answer: ");
             string? answer = Console.ReadLine();
