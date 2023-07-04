@@ -317,7 +317,7 @@ public class MenuController
                 App.StackFlashcards = FlashcardController.GetFlashcards(stack.Id);
             }
 
-            if(App.StackFlashcards.Count == 0)
+            if (App.StackFlashcards.Count == 0)
             {
                 Console.WriteLine("This stack is empty");
                 Console.WriteLine("Press any key to continue");
@@ -325,7 +325,10 @@ public class MenuController
             }
 
 
-          var session =  StudySessionController.CreateStudySession(App.CurrentStack, App.StackFlashcards);
+            var session = StudySessionController.CreateStudySession(App.CurrentStack, App.StackFlashcards);
+            session.Id = App.StudySessions.Max(x => x.Id) + 1;
+
+            App.StudySessions.Add(session);
         }
 
 
@@ -333,5 +336,5 @@ public class MenuController
     }
 
 
-  
+
 }

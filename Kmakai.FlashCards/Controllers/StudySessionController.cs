@@ -42,7 +42,7 @@ public class StudySessionController
                 session.Id = reader.GetInt32(0);
                 session.StackId = reader.GetInt32(1);
                 session.Score = reader.GetInt32(2);
-                session.Date = reader.GetDateTime(3);
+                session.Date = DateOnly.FromDateTime(reader.GetDateTime(3));
                 sessions.Add(session);
             }
 
@@ -57,7 +57,7 @@ public class StudySessionController
         int score = 0;
         StudySession session = new StudySession();
         session.StackId = stack.Id;
-        session.Date = DateTime.Now;
+        session.Date = DateOnly.FromDateTime(DateTime.Now);
 
         foreach (Flashcard card in cards)
         {
