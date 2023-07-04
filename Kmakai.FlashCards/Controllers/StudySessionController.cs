@@ -1,6 +1,7 @@
 ﻿using Kmakai.FlashCards.Models;
 using System.Configuration;
 using System.Data.SqlClient;
+using ConsoleTableExt;
 
 namespace Kmakai.FlashCards.Controllers;
 
@@ -50,9 +51,45 @@ public class StudySessionController
 
         return sessions;
     }
-    
-    //public static StudySession CreateSession()
-    //{
-    //     Console.WriteLine("What stack would you like to study?");
-    //}
+
+    public static StudySession CreateStudySession(Stack stack, List<Flashcard> cards)
+    {
+        int score = 0;
+        StudySession session = new StudySession();
+        session.StackId = stack.Id;
+        session.Date = DateTime.Now;
+
+        foreach (Flashcard card in cards)
+        {
+            var table = new List<List<object?>> { new List<object?> { card.Front } };
+            ConsoleTableBuilder.From(table).WithFormat(ConsoleTableBuilderFormat.Alternative).WithColumn("Front").ExportAndWriteLine();
+           
+            Console.WriteLine("What is the answer for this card");
+            Console.Write("Answer: ");
+            string? answer = Console.ReadLine();
+            if (answer == card.Back)
+            {
+                table = new List<List<object?>> { new List<object?> { card.Front, card.Back } };
+                ConsoleTableBuilder.From(table).WithColumn("Front", "back").ExportAndWriteLine();
+                Console.WriteLine("Correct!");
+                score++;
+
+                Console.WriteLine("Press any key to continue");
+                Console.ReadKey();
+            }
+            else
+            {
+                Console.WriteLine($"Incorrect. The answer is {card.Back}");
+                table = new List<List<object?>> { new List<object?> { card.Front, card.Back } };
+                ConsoleTableBuilder.From(table).WithFormat(ConsoleTableBuilderFormat.Alternative).WithColumn("Front", "back").ExportAndWriteLine();
+
+                Console.WriteLine("Press any key to continue");
+                Console.ReadKey();
+            }
+        }
+
+        session.Score = score;
+        AddSession(session);
+        return session;
+    }
 }

@@ -25,7 +25,6 @@ public class StackController
             connection.Close();
         }
 
-        Console.WriteLine("Stack created");
     }
 
     public static Stack GetStack(string name)
@@ -93,11 +92,6 @@ public class StackController
         {
             connection.Open();
             var command = connection.CreateCommand();
-            command.CommandText = @$" 
-                DELETE FROM Flashcards
-                WHERE StackId = {stackId}";
-
-            command.ExecuteNonQuery();
 
             command.CommandText = @$" 
                 DELETE FROM Stacks

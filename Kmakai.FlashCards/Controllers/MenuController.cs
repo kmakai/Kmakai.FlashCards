@@ -1,4 +1,5 @@
 ﻿using Kmakai.FlashCards.Models;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Kmakai.FlashCards.Controllers;
 
@@ -30,6 +31,23 @@ public class MenuController
                 if (App != null) DisplayController.DisplayStacksMenu(App.Stacks);
                 HandleStacksMenu();
                 break;
+            case "3":
+                if (App?.Stacks.Count == 0)
+                {
+                    Console.WriteLine("No stacks found");
+                    Console.WriteLine("Press any key to continue");
+                    Console.ReadKey();
+                    break;
+                }
+
+                HandleStudyMenu();
+                break;
+            case "4":
+                DisplayController.DisplaySessions(App.StudySessions);
+                break;
+            case "5":
+                App.IsRunning = false;
+                break;
         }
 
     }
@@ -38,6 +56,13 @@ public class MenuController
     {
         Console.Write("option: ");
         string? input = Console.ReadLine();
+
+        while (String.IsNullOrEmpty(input) || input == "")
+        {
+            Console.WriteLine("Please enter a valid option");
+            Console.Write("option: ");
+            input = Console.ReadLine();
+        }
 
         switch (input)
         {
@@ -48,6 +73,7 @@ public class MenuController
                 HandleStackMenu();
                 break;
             case "3":
+                DisplayController.DisplayMainMenu();
                 break;
         }
     }
@@ -61,8 +87,8 @@ public class MenuController
 
         while (stack == null)
         {
-            Console.WriteLine("Please enter a valid id");
-            Console.Write("Id: ");
+            Console.WriteLine("Please enter a valid name");
+            Console.Write("Name: ");
             nameInput = Console.ReadLine();
             stack = App?.Stacks.FirstOrDefault(x => x.Name == nameInput);
         }
@@ -73,13 +99,21 @@ public class MenuController
             App.StackFlashcards = FlashcardController.GetFlashcards(stack.Id);
         }
 
+        string? input = "";
 
-
-        while (true)
+        while (input != "4" || input == "")
         {
+
             DisplayController.DisplayStackMenu(stack);
             Console.Write("option: ");
-            string? input = Console.ReadLine();
+            input = Console.ReadLine();
+
+            while (input == "" || String.IsNullOrEmpty(input))
+            {
+                Console.WriteLine("Please enter a valid option");
+                Console.Write("option: ");
+                input = Console.ReadLine();
+            }
 
             switch (input)
             {
@@ -93,9 +127,12 @@ public class MenuController
                     DisplayController.DisplayFlashcards(App.StackFlashcards);
                     break;
                 case "4":
+                    DisplayController.DisplayMainMenu();
                     break;
             }
+
         }
+
 
 
     }
@@ -126,15 +163,17 @@ public class MenuController
     public void DeleteStack()
     {
         Console.WriteLine("Enter the name of the stack you want to delete");
-        Console.Write("Id: ");
+        Console.Write("Name: ");
         string? input = Console.ReadLine();
-        int id;
 
-        while (!int.TryParse(input, out id) || !App.Stacks.Any(x => x.Id == id))
+        var stack = App?.Stacks.FirstOrDefault(x => x.Name == input);
+
+        while (stack == null)
         {
-            Console.WriteLine("Please enter a valid id");
-            Console.Write("Id: ");
+            Console.WriteLine("Please enter a valid name");
+            Console.Write("name: ");
             input = Console.ReadLine();
+            stack = App?.Stacks.FirstOrDefault(x => x.Name == input);
         }
 
         char? confirm = null;
@@ -148,8 +187,8 @@ public class MenuController
 
         if (confirm == 'y')
         {
-            StackController.DeleteStack(id);
-            App.Stacks.RemoveAll(x => x.Id == id);
+            StackController.DeleteStack(stack.Id);
+            App.Stacks.Remove(stack);
             Console.WriteLine("Stack deleted");
             Thread.Sleep(1000);
         }
@@ -215,7 +254,7 @@ public class MenuController
             input = Console.ReadLine();
         }
 
-       var stack = App.StackFlashcards[id - 1];
+        var stack = App.StackFlashcards[id - 1];
         char? confirm = null;
         while (confirm != 'y' && confirm != 'n')
         {
@@ -238,4 +277,53 @@ public class MenuController
         }
     }
 
+
+    // Sudy Menu Methods
+
+    public void HandleStudyMenu()
+    {
+        DisplayController.displayStacks(App.Stacks);
+        Console.WriteLine("Enter the name of the stack you want to study or type X to exit");
+        Console.Write("Name: ");
+
+        string? nameInput = Console.ReadLine();
+        if (nameInput == "X" || nameInput == "x")
+        {
+            DisplayController.DisplayMainMenu();
+        }
+        else
+        {
+            var stack = App?.Stacks.FirstOrDefault(x => x.Name == nameInput);
+
+            while (stack == null)
+            {
+                Console.WriteLine("Please enter a valid name");
+                Console.Write("Name: ");
+                nameInput = Console.ReadLine();
+                stack = App?.Stacks.FirstOrDefault(x => x.Name == nameInput);
+            }
+
+            if (App != null)
+            {
+                App.CurrentStack = stack;
+                App.StackFlashcards = FlashcardController.GetFlashcards(stack.Id);
+            }
+
+            if(App.StackFlashcards.Count == 0)
+            {
+                Console.WriteLine("This stack is empty");
+                Console.WriteLine("Press any key to continue");
+                Console.ReadKey();
+            }
+
+
+          var session =  StudySessionController.CreateStudySession(App.CurrentStack, App.StackFlashcards);
+        }
+
+
+
+    }
+
+
+  
 }

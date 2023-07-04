@@ -41,6 +41,16 @@ public class DisplayController
 
     public static void DisplayStacksMenu(List<Stack> stacks)
     {
+        displayStacks(stacks);
+
+        Console.WriteLine("What would you like to do?");
+        Console.WriteLine("1.Delete a stack");
+        Console.WriteLine("2.Manage Stack");
+        Console.WriteLine("3.Return to main menu");
+    }
+
+    public static void displayStacks(List<Stack> stacks)
+    {
         List<string> stackNames = new List<string>();
         foreach (var stack in stacks)
         {
@@ -52,10 +62,6 @@ public class DisplayController
             .WithColumn("Name")
             .ExportAndWriteLine();
 
-        Console.WriteLine("What would you like to do?");
-        Console.WriteLine("1.Delete a stack");
-        Console.WriteLine("2.Manage Stack");
-        Console.WriteLine("3.Return to main menu");
     }
 
     public static void DisplaySessions(List<StudySession> sessions)
@@ -63,11 +69,11 @@ public class DisplayController
         Console.Clear();
         Console.WriteLine("----------Study Sessions------------");
         ConsoleTableBuilder.From(sessions)
-            .WithColumn("Id", "Id")
-            .WithColumn("StackId", "StackId")
-            .WithColumn("Score", "Score")
-            .WithColumn("Date", "Date")
+            .WithColumn("Id", "StackId", "Score", "Date")
             .ExportAndWriteLine();
+
+        Console.WriteLine("Press any key to continue");
+        Console.ReadKey();
     }
 
     public static void DisplayFlashcards(List<Flashcard> flashcards)
